@@ -213,9 +213,7 @@ class App(customtkinter.CTk):
     def Channel_get(self, Chan_nr):
         global channel_nr_state_bit
         global command_msg
-        if channel_nr_state_bit == 0:
-            command_msg[10] = int(Chan_nr)
-            channel_nr_state_bit = 1
+        command_msg[10] = int(Chan_nr)
         app.command_msg_label_2.configure(text = f"{command_msg}")
 
     def Stim_Mode_get(self, stim_mode):
@@ -272,16 +270,14 @@ class App(customtkinter.CTk):
         global command_sent
         global command_msg
 
-        if (command_sent == 0):
-            chksum_python = ((chksum_python + x) for x in command_msg) # checksum to check against after writing to the serial interface
-            command_word_str = ','.join(str(x) for x in command_msg)
-            command_word_str = '<' + command_word_str
-            command_word_str = command_word_str + '>'
-            serialObj.write(bytes(command_word_str, encoding = 'utf-8'))
-            #time.sleep(1)
-            print(command_word_str)
-            print(f"Checksum (sent): {chksum_python}")
-            command_sent = 1
+        chksum_python = ((chksum_python + x) for x in command_msg) # checksum to check against after writing to the serial interface
+        command_word_str = ','.join(str(x) for x in command_msg)
+        command_word_str = '<' + command_word_str
+        command_word_str = command_word_str + '>'
+        serialObj.write(bytes(command_word_str, encoding = 'utf-8'))
+        #time.sleep(1)
+        print(command_word_str)
+        print(f"Checksum (sent): {chksum_python}")
 
     def reset(self):
         global PW_state_bit
@@ -314,7 +310,7 @@ class App(customtkinter.CTk):
         print(portNumber)
         serialObj.port = portNumber
         serialObj.baudrate = 115200
-        serialObj.timeout = 0.1
+        serialObj.timeout = 0 # mandatory to ensure non-locking interface
         serialObj.writeTimeout = 0.1
         serialObj.open()
         #print(serialObj.in_waiting)
