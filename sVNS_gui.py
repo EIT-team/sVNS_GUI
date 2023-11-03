@@ -6,7 +6,7 @@ import time
 import serial.tools.list_ports
 
 #Set default UI appearance parameters
-customtkinter.set_appearance_mode("System")  # Modes: "System" (standard), "Dark", "Light"
+customtkinter.set_appearance_mode("Light")  # Modes: "System" (standard), "Dark", "Light"
 customtkinter.set_default_color_theme("blue")  # Themes: "blue" (standard), "green", "dark-blue"
 # Define serial port object
 ports = serial.tools.list_ports.comports()
