@@ -82,18 +82,13 @@ class App(customtkinter.CTk):
         self.com_selection.grid(row=1,column=0,padx=(10, 10), pady=(10, 10), sticky="nsew")
         self.com_confirmation = customtkinter.CTkButton(self.options_frame,text='Get COM port', command=self.initComPort)
         self.com_confirmation.grid(row=2,column=0,padx=(10, 10), pady=(10, 10), sticky="nsew")
-        # Color theme option selection
-        self.appearance_mode_label = customtkinter.CTkLabel(self.options_frame, text="Appearance Mode:", anchor="w")
-        self.appearance_mode_label.grid(row=3, column=0, padx=(10,10), pady=(10, 10))
-        self.appearance_mode_optionemenu = customtkinter.CTkOptionMenu(self.options_frame, values=["Light", "Dark", "System"],
-                                                                       command=self.change_appearance_mode_event)
-        self.appearance_mode_optionemenu.grid(row=4, column=0, padx=(10,10), pady=(10, 10))
+
         # UI scaling option selection
         self.scaling_label = customtkinter.CTkLabel(self.options_frame, text="UI Scaling:", anchor="w")
-        self.scaling_label.grid(row=5, column=0, padx=(10,10), pady=(10, 10))
+        self.scaling_label.grid(row=3, column=0, padx=(10,10), pady=(10, 10))
         self.scaling_optionemenu = customtkinter.CTkOptionMenu(self.options_frame, values=["80%", "90%", "100%", "110%", "120%"],
                                                                command=self.change_scaling_event)
-        self.scaling_optionemenu.grid(row=6, column=0, padx=(10,10), pady=(10, 10))
+        self.scaling_optionemenu.grid(row=4, column=0, padx=(10,10), pady=(10, 10))
 
         # Create stimulation parameters frame
         self.parameter_frame = customtkinter.CTkFrame(self, fg_color="transparent")
@@ -255,9 +250,6 @@ class App(customtkinter.CTk):
         customMessage = app.stringEntry.get()
         print(customMessage)
         serialObj.write(bytes(customMessage, encoding = 'utf-8'))
-        
-    def change_appearance_mode_event(self, new_appearance_mode: str):
-        customtkinter.set_appearance_mode(new_appearance_mode)
 
     def change_scaling_event(self, new_scaling: str):
         new_scaling_float = int(new_scaling.replace("%", "")) / 100
