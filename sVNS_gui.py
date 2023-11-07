@@ -53,7 +53,7 @@ class App(customtkinter.CTk):
         self.textbox.insert("0.0","\n")
         self.stringEntry = customtkinter.CTkEntry(self.sermon_frame,width=550,placeholder_text="Serial entry")
         self.stringEntry.grid(row=1,column=0,padx=(10, 10), pady=(10, 10),sticky="nsew")
-        self.stringEntry_accept = customtkinter.CTkButton(self.sermon_frame,text="Send custom command",
+        self.stringEntry_accept = customtkinter.CTkButton(self.sermon_frame,text="STOP STIMULATION\nSend custom command",
                                                           command=self.customMessageSend)
         self.stringEntry_accept.grid(row=2,column=0,padx=(10, 10), pady=(10, 10),sticky="nsew")
         
@@ -63,13 +63,13 @@ class App(customtkinter.CTk):
         self.memReadOnce_button = customtkinter.CTkButton(self.preDefinedBtns,text="Read all memory once",
                                                           command=self.memReadOnce)
         self.memReadOnce_button.grid(row=0,column=0, padx=(10,10), pady=(10, 10))
-        self.memWrite_button = customtkinter.CTkButton(self.preDefinedBtns,text="Write to memory",
+        self.memWrite_button = customtkinter.CTkButton(self.preDefinedBtns,text="Write stimulation parameters",
                                                           command=self.memWrite)
         self.memWrite_button.grid(row=1,column=0, padx=(10,10), pady=(10, 10))
-        self.memRead_button = customtkinter.CTkButton(self.preDefinedBtns,text="Read memory until restart",
+        self.memRead_button = customtkinter.CTkButton(self.preDefinedBtns,text="START STIMULATION\n(Raw memory readout)",
                                                           command=self.memRead)
         self.memRead_button.grid(row=2,column=0, padx=(10,0), pady=(10, 10))
-        self.readStim_button = customtkinter.CTkButton(self.preDefinedBtns,text="Read Stim Channels until restart",
+        self.readStim_button = customtkinter.CTkButton(self.preDefinedBtns,text="START STIMULATION Trigger mode\n(Stim channel readout)",
                                                           command=self.readStim)
         self.readStim_button.grid(row=3,column=0, padx=(10,10), pady=(10, 10))
 
@@ -157,16 +157,14 @@ class App(customtkinter.CTk):
         self.program_frame = customtkinter.CTkFrame(self.parameter_frame)
         self.program_frame.grid(row=8,column=1,padx=(10, 0), sticky="nsew")
 
-        # Program, reset buttons and command_msg label 
+        # Reset button and command_msg label 
         self.command_msg_label_1 = customtkinter.CTkLabel(self.parameter_frame, text = "Command word:")
         self.command_msg_label_1.grid(row=6,column=1)
         self.command_msg_label_2 = customtkinter.CTkLabel(self.parameter_frame, text = "")
         self.command_msg_label_2.configure(text = f"{command_msg}")
         self.command_msg_label_2.grid(row=7,column=1)
-        self.program_btn = customtkinter.CTkButton(self.program_frame,command=self.program_send,text="Program")
-        self.program_btn.grid(row=0,column=0)
         self.reset_btn = customtkinter.CTkButton(self.program_frame,command=self.reset,text="Reset")
-        self.reset_btn.grid(row=0,column=1)
+        self.reset_btn.grid(row=0,column=0)
 
     # Interactivity functions
 
@@ -227,7 +225,7 @@ class App(customtkinter.CTk):
         global curampl_state_bit
         global command_msg
         command_msg[8] = int(Iset)
-        I_real = Iset * 32
+        I_real = round((Iset * 32 * 1.005), 2)
             # curampl_state_bit = 1
         app.command_msg_label_2.configure(text = f"{command_msg}")
         app.slider_amplitude_label.configure(text = f"Amplitude = {I_real} uA")
@@ -341,6 +339,8 @@ class App(customtkinter.CTk):
         custom_command_word = '<1>'
         print(custom_command_word)
         serialObj.write(bytes(custom_command_word,encoding='utf-8'))
+
+        self.program_send()
 
     def memRead(self):
         print("memRead")
