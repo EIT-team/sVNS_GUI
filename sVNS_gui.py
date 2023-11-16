@@ -53,11 +53,11 @@ class App(customtkinter.CTk):
         self.textbox.insert("0.0","\n")
         self.stringEntry = customtkinter.CTkEntry(self.sermon_frame,width=550,placeholder_text="Serial entry")
         self.stringEntry.grid(row=1,column=0,padx=(10, 10), pady=(10, 10),sticky="nsew")
-        self.stringEntry_accept = customtkinter.CTkButton(self.sermon_frame,text="STOP STIMULATION\nSend custom command",
+        self.stringEntry_accept = customtkinter.CTkButton(self.sermon_frame,text="Send custom command",
                                                           command=self.customMessageSend)
         self.stringEntry_accept.grid(row=2,column=0,padx=(10, 10), pady=(10, 10),sticky="nsew")
         
-        #Predefined operations/communications (read, write, trigger) frame
+        #Predefined operations/communications (read, write, trigger, stop) frame
         self.preDefinedBtns = customtkinter.CTkFrame(self,fg_color="transparent")
         self.preDefinedBtns.grid(row=0,column=1,rowspan=4,padx=(10, 10), pady=(10, 10),sticky="nsew")
         self.memReadOnce_button = customtkinter.CTkButton(self.preDefinedBtns,text="Read all memory once",
@@ -72,6 +72,9 @@ class App(customtkinter.CTk):
         self.readStim_button = customtkinter.CTkButton(self.preDefinedBtns,text="START STIMULATION Trigger mode\n(Stim channel readout)",
                                                           command=self.readStim)
         self.readStim_button.grid(row=3,column=0, padx=(10,10), pady=(10, 10))
+        self.stimStop_button = customtkinter.CTkButton(self.preDefinedBtns,text="STOP STIMULATION",
+                                                          command=self.stimStop)
+        self.stimStop_button.grid(row=4,column=0, padx=(10,10), pady=(10, 10))
 
         # Create options frame
         self.options_frame = customtkinter.CTkFrame(self,fg_color="transparent")
@@ -353,6 +356,9 @@ class App(customtkinter.CTk):
         custom_command_word = '<3>'
         print(custom_command_word)
         serialObj.write(bytes(custom_command_word,encoding='utf-8'))
+
+    def stimStop(self):
+        serialObj.write(bytes(' ',encoding='utf-8'))
 
 
 if __name__ == "__main__":
