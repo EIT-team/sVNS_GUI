@@ -14,11 +14,12 @@ serialObj = serial.Serial()
 #serialObj = serial.Serial(port='COM4',baudrate=115200, timeout=0.1) # example of non-blocking serial object 
 
 # Define default programming message and an empty message array
-deft_command_msg = [0,1,3,230,0,5,0,1,63,3,0,1]
+deft_command_msg = [0,1,3,230,0,1,0,1,63,3,0,1]
 command_msg = []
 i = 0
 for i in range(12):
     command_msg.append(0)
+command_msg = deft_command_msg.copy()
 
 # Define global state bits
 PW_state_bit = 0
@@ -102,14 +103,17 @@ class App(customtkinter.CTk):
         self.slider_mode_label.grid(row=0, column=0, padx=(10, 0),)
         self.slider_mode = customtkinter.CTkSlider(self.parameter_frame, command = self.Stim_Mode_get, from_=1, to=3, number_of_steps=2)
         self.slider_mode.grid(row=1, column=0, padx=(10, 0), sticky="ew")
+        self.slider_mode.set(3)
         self.slider_amplitude_label = customtkinter.CTkLabel(self.parameter_frame, text="Amplitude (uA)", anchor="w")
         self.slider_amplitude_label.grid(row=4, column=0, padx=(10, 0))
         self.slider_amplitude = customtkinter.CTkSlider(self.parameter_frame, command = self.amplitude_get, from_=0, to=63, number_of_steps=63)
         self.slider_amplitude.grid(row=5, column=0, padx=(10, 0), sticky="ew")
+        self.slider_amplitude.set(0)
         self.slider_dutycycle_label = customtkinter.CTkLabel(self.parameter_frame, text="Stim time per channel (s)", anchor="w")
         self.slider_dutycycle_label.grid(row=0, column=2, padx=(10, 0))
         self.slider_dutycycle = customtkinter.CTkSlider(self.parameter_frame, command = self.Stim_On_times_get, from_=1,to=120,number_of_steps=119)
         self.slider_dutycycle.grid(row=1, column=2, padx=(10, 0))
+        self.slider_dutycycle.set(1)
 
         # Create PW, PF and channel numbers dropdowns
         # Initialise pulse width range and strings
@@ -137,20 +141,23 @@ class App(customtkinter.CTk):
         self.ChanNumDropdown = customtkinter.CTkComboBox(self.parameter_frame,
                                                         values=Channels_str, command = self.Channel_get)
         self.ChanNumDropdown.grid(row=1, column = 1,padx=(10, 0))
+        self.ChanNumDropdown.set(0)
         self.PWdropdown_label = customtkinter.CTkLabel(self.parameter_frame, text="Pulse Width (us)", anchor="w")
         self.PWdropdown_label.grid(row=2, column = 0,padx=(10, 0))
         self.PWdropdown = customtkinter.CTkComboBox(self.parameter_frame,
                                                     values=PWs_str, command = self.PW_get)
         self.PWdropdown.grid(row=3, column=0, padx=(10, 0))
+        self.PWdropdown.set(50)
         self.PFdropdown_label = customtkinter.CTkLabel(self.parameter_frame, text="Pulse Frequency (Hz)", anchor="w")
         self.PFdropdown_label.grid(row=2, column = 1,padx=(10, 0))
         self.PFdropdown = customtkinter.CTkComboBox(self.parameter_frame,
                                                     values=PFs_str, command = self.PF_get)
         self.PFdropdown.grid(row=3, column=1, padx=(10, 0))
+        self.PFdropdown.set(20)
         
         # Create telemetry and on/off switches 
-        self.On_Off_state = customtkinter.StringVar(value="0")
-        self.Telemetry_state = customtkinter.StringVar(value="0")
+        self.On_Off_state = customtkinter.StringVar(value="1")
+        self.Telemetry_state = customtkinter.StringVar(value="1")
         self.telemetry_switch = customtkinter.CTkSwitch(master=self.parameter_frame, text="Telemetry On/Off", command=self.Telemetry_state_get, variable=self.Telemetry_state, onvalue="1", offvalue="0")
         self.telemetry_switch.grid(row=2,column=2,padx=(10, 0))
         self.on_off_switch = customtkinter.CTkSwitch(master=self.parameter_frame, text="Stimulation out On/Off", command=self.On_Off_get, variable=self.On_Off_state, onvalue="1", offvalue="0")
@@ -158,18 +165,19 @@ class App(customtkinter.CTk):
         
         # Create program / reset frame
         self.program_frame = customtkinter.CTkFrame(self.parameter_frame)
-        self.program_frame.grid(row=8,column=1,padx=(10, 0), sticky="nsew")
+        self.program_frame.grid(row=8,column=1,padx=(10, 0))
 
         # Reset button and command_msg label 
         self.command_msg_label_1 = customtkinter.CTkLabel(self.parameter_frame, text = "Command word:")
         self.command_msg_label_1.grid(row=6,column=1)
-        self.command_msg_label_2 = customtkinter.CTkLabel(self.parameter_frame, text = "")
+        self.command_msg_label_2 = customtkinter.CTkLabel(self.parameter_frame, text = "", width=200)
         self.command_msg_label_2.configure(text = f"{command_msg}")
-        self.command_msg_label_2.grid(row=7,column=1)
+        self.command_msg_label_2.grid(row=7,column=1,sticky='nsew')
         self.reset_btn = customtkinter.CTkButton(self.program_frame,command=self.reset,text="Reset")
         self.reset_btn.grid(row=0,column=0)
 
     # Interactivity functions
+    # Use "global" keyword to change the command message and its parts from within the class functions
 
     def PW_get(self, PW_number):
         global PW_state_bit
@@ -282,6 +290,8 @@ class App(customtkinter.CTk):
         global channel_nr_state_bit
         global command_sent
         global command_msg
+        global deft_command_msg
+        print(deft_command_msg)
         PW_state_bit = 0
         PF_state_bit = 0
         T_on_state_bit = 0
@@ -294,7 +304,26 @@ class App(customtkinter.CTk):
         i = 0
         for i in range(12):
             command_msg.append(0)
-        app.command_msg_label_2.configure(text = f"{command_msg}") # update the label of the command word
+        #command_msg = deft_command_msg.copy() # reset the command message to the default one
+        #print(deft_command_msg)
+        #self.command_msg_label_2.configure(text = f"{command_msg}") # update the label of the command word
+        self.slider_mode.set(3) # reset the slider to the default position
+        self.Stim_Mode_get(3) # reset the command_msg value byte to default
+        self.slider_amplitude.set(0)
+        self.amplitude_get(0)
+        self.slider_dutycycle.set(1)
+        self.Stim_On_times_get(1)
+        self.ChanNumDropdown.set(0)
+        self.Channel_get(0)
+        self.PWdropdown.set(50)
+        self.PW_get("50")
+        self.PFdropdown.set(20)
+        self.PF_get("20")
+        self.telemetry_switch.select()
+        self.Telemetry_state_get()
+        self.on_off_switch.select()
+        self.On_Off_get()
+
   
     def initComPort(self):
         currentPort = self.com_selection.get()
