@@ -132,7 +132,7 @@ class App(customtkinter.CTk):
         for Stim_On_time in Stim_On_times:
             Stim_On_times_str.append(str(Stim_On_time))
             # Initialise channel list
-        Channels = range(0,14)
+        Channels = range(0,15)
         Channels_str = []
         for Channel in Channels:
             Channels_str.append(str(Channel))
