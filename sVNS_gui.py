@@ -14,10 +14,11 @@ serialObj = serial.Serial()
 #serialObj = serial.Serial(port='COM4',baudrate=115200, timeout=0.1) # example of non-blocking serial object 
 
 # Define default programming message and an empty message array
-deft_command_msg = [0,1,3,230,0,1,0,1,63,3,0,1]
+#deft_command_msg = [0,1,3,230,0,1,0,1,63,3,0,1,0]
+deft_command_msg = [0,0,0,0,0,0,0,0,0,0,0,0,0]
 command_msg = []
 i = 0
-for i in range(12):
+for i in range(13):
     command_msg.append(0)
 command_msg = deft_command_msg.copy()
 
@@ -121,7 +122,7 @@ class App(customtkinter.CTk):
         for PF in PFs:
             PFs_str.append(str(PF))
             # Initialise "stimulation on" times
-        Stim_On_times = [5,10,20,30,60,120]
+        Stim_On_times = [5,10,20,30]
         Stim_On_times_str = []
         for Stim_On_time in Stim_On_times:
             Stim_On_times_str.append(str(Stim_On_time))
@@ -212,8 +213,10 @@ class App(customtkinter.CTk):
     def Stim_On_times_get(self, stim_on_time):
         global T_on_state_bit
         global command_msg
-        command_msg[4] = int(stim_on_time) >> 8
-        command_msg[5] = int(stim_on_time) & 0xFF
+        stim_time_encoded = int(stim_on_time) / 0.00005
+        command_msg[4] = (int(stim_time_encoded) >> 16) & 0xFF
+        command_msg[12] = (int(stim_time_encoded) >> 8) & 0xFF
+        command_msg[5] = int(stim_time_encoded) & 0xFF
         app.command_msg_label_2.configure(text = f"{command_msg}")
         app.slider_dutycycle_label.configure(text= f"Stim time per channel (s): {stim_on_time}")
 
