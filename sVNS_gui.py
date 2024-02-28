@@ -65,16 +65,13 @@ class App(customtkinter.CTk):
                                                           command=self.memReadOnce)
         self.memReadOnce_button.grid(row=0,column=0, padx=(10,10), pady=(10, 10))
         self.memWrite_button = customtkinter.CTkButton(self.preDefinedBtns,text="Write stimulation parameters",
-                                                          command=self.memWrite)
+                                                          command=self.memWrite,fg_color="Orange",text_color="Black")
         self.memWrite_button.grid(row=1,column=0, padx=(10,10), pady=(10, 10))
-        self.memRead_button = customtkinter.CTkButton(self.preDefinedBtns,text="START STIMULATION\n(Raw memory readout)",
-                                                          command=self.memRead)
-        self.memRead_button.grid(row=2,column=0, padx=(10,0), pady=(10, 10))
-        self.readStim_button = customtkinter.CTkButton(self.preDefinedBtns,text="START STIMULATION Trigger mode\n(Stim channel readout)",
-                                                          command=self.readStim)
-        self.readStim_button.grid(row=3,column=0, padx=(10,10), pady=(10, 10))
+        self.readStim_button = customtkinter.CTkButton(self.preDefinedBtns,text="START STIMULATION \n(Stim channel readout)",
+                                                          command=self.readStim,fg_color="Green",text_color="Black")
+        self.readStim_button.grid(row=2,column=0, padx=(10,10), pady=(10, 10))
         self.stimStop_button = customtkinter.CTkButton(self.preDefinedBtns,text="STOP STIMULATION",
-                                                          command=self.stimStop)
+                                                          command=self.stimStop,fg_color="Red",text_color="Black")
         self.stimStop_button.grid(row=4,column=0, padx=(10,10), pady=(10, 10))
 
         # Create options frame
@@ -109,15 +106,12 @@ class App(customtkinter.CTk):
         self.slider_amplitude = customtkinter.CTkSlider(self.parameter_frame, command = self.amplitude_get, from_=0, to=63, number_of_steps=63)
         self.slider_amplitude.grid(row=5, column=0, padx=(10, 0), sticky="ew")
         self.slider_amplitude.set(0)
-        self.slider_dutycycle_label = customtkinter.CTkLabel(self.parameter_frame, text="Stim time per channel (s)", anchor="w")
-        self.slider_dutycycle_label.grid(row=0, column=2, padx=(10, 0))
-        self.slider_dutycycle = customtkinter.CTkSlider(self.parameter_frame, command = self.Stim_On_times_get, from_=1,to=120,number_of_steps=119)
-        self.slider_dutycycle.grid(row=1, column=2, padx=(10, 0))
-        self.slider_dutycycle.set(1)
+        
 
         # Create PW, PF and channel numbers dropdowns
         # Initialise pulse width range and strings
-        PWs = range(50,4050,50)
+        #PWs = range(50,4050,50)
+        PWs = [50, 1000]
         PWs_str = []
         for PW in PWs:
             PWs_str.append(str(PW))
@@ -131,6 +125,15 @@ class App(customtkinter.CTk):
         Stim_On_times_str = []
         for Stim_On_time in Stim_On_times:
             Stim_On_times_str.append(str(Stim_On_time))
+        
+        self.slider_dutycycle_label = customtkinter.CTkLabel(self.parameter_frame, text="Stim time per channel (s)", anchor="w")
+        self.slider_dutycycle_label.grid(row=0, column=2, padx=(10, 0))
+        self.slider_dutycycle_dropdown = customtkinter.CTkComboBox(self.parameter_frame, 
+                                                                   values = Stim_On_times_str, command = self.Stim_On_times_get)
+        self.slider_dutycycle_dropdown.grid(row=1, column=2, padx=(10, 0))
+        self.slider_dutycycle_dropdown.set(5)
+
+
             # Initialise channel list
         Channels = range(0,15)
         Channels_str = []
