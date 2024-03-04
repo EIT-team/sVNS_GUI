@@ -214,22 +214,24 @@ class App(customtkinter.CTk):
         global T_on_state_bit
         global command_msg
         stim_time_encoded = int(stim_on_time) / 0.00005
-        command_msg[4] = (int(stim_time_encoded) >> 16) & 0xFF
-        command_msg[12] = (int(stim_time_encoded) >> 8) & 0xFF
-        command_msg[5] = int(stim_time_encoded) & 0xFF
+        command_msg[4] = (int(stim_time_encoded) >> 32) & 0xFF
+        command_msg[5] = (int(stim_time_encoded) >> 16) & 0xFF
+        command_msg[6] = (int(stim_time_encoded) >> 8) & 0xFF
+        command_msg[7] = (int(stim_time_encoded) & 0xFF)
+        
         app.command_msg_label_2.configure(text = f"{command_msg}")
         app.slider_dutycycle_label.configure(text= f"Stim time per channel (s): {stim_on_time}")
 
     def Channel_get(self, Chan_nr):
         global channel_nr_state_bit
         global command_msg
-        command_msg[10] = int(Chan_nr)
+        command_msg[11] = int(Chan_nr)
         app.command_msg_label_2.configure(text = f"{command_msg}")
 
     def Stim_Mode_get(self, stim_mode):
         global stim_mode_state_bit
         global command_msg
-        command_msg[9] = int(stim_mode)
+        command_msg[10] = int(stim_mode)
         stim_modes = {
             1: "Single-channel stimulation",
             2: "Channel scanning (non-loop)",
@@ -241,7 +243,7 @@ class App(customtkinter.CTk):
     def amplitude_get(self, Iset):
         global curampl_state_bit
         global command_msg
-        command_msg[8] = int(Iset)
+        command_msg[9] = int(Iset)
         I_real = round((Iset * 32 * 1.005), 2)
             # curampl_state_bit = 1
         app.command_msg_label_2.configure(text = f"{command_msg}")
@@ -252,13 +254,13 @@ class App(customtkinter.CTk):
         # global On_Off_state
         # global switch_var
         #print("switch toggled, current value:", self.switch_var.get())
-        command_msg[7] = int(self.On_Off_state.get())
+        command_msg[8] = int(self.On_Off_state.get())
         app.command_msg_label_2.configure(text=f"{command_msg}")
         
     def Telemetry_state_get(self):
         global command_msg
         # global Telemetry_state
-        command_msg[11] = int(self.Telemetry_state.get())
+        command_msg[12] = int(self.Telemetry_state.get())
         app.command_msg_label_2.configure(text=f"{command_msg}")
 
     def customMessageSend(self):
