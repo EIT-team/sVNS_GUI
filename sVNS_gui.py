@@ -214,10 +214,10 @@ class App(customtkinter.CTk):
         global T_on_state_bit
         global command_msg
         stim_time_encoded = int(stim_on_time) / 0.00005
-        command_msg[4] = (int(stim_time_encoded) >> 32) & 0xFF
-        command_msg[5] = (int(stim_time_encoded) >> 16) & 0xFF
-        command_msg[6] = (int(stim_time_encoded) >> 8) & 0xFF
-        command_msg[7] = (int(stim_time_encoded) & 0xFF)
+        command_msg[4] = (int(stim_time_encoded) & 0xff000000)  >> 24
+        command_msg[5] = (int(stim_time_encoded) & 0x00ff0000)  >> 16
+        command_msg[6] = (int(stim_time_encoded) & 0x0000ff00) >> 8
+        command_msg[7] = (int(stim_time_encoded) & 0x000000ff)
         
         app.command_msg_label_2.configure(text = f"{command_msg}")
         app.slider_dutycycle_label.configure(text= f"Stim time per channel (s): {stim_on_time}")
