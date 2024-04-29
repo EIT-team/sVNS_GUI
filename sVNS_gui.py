@@ -15,7 +15,7 @@ serialObj = serial.Serial()
 
 # Define default programming message and an empty message array
 #deft_command_msg = [0,1,3,230,0,1,0,1,63,3,0,1,0]
-deft_command_msg = [0,1,3,230,0,100,1,63,3,0,1]
+deft_command_msg = [0,1,56,158,0,100,1,0,2,0,1]
 command_msg = []
 i = 0
 for i in range(11):
@@ -101,7 +101,7 @@ class App(customtkinter.CTk):
         self.slider_mode_label.grid(row=0, column=0, padx=(10, 0),)
         self.slider_mode = customtkinter.CTkSlider(self.parameter_frame, command = self.Stim_Mode_get, from_=1, to=3, number_of_steps=2)
         self.slider_mode.grid(row=1, column=0, padx=(10, 0), sticky="ew")
-        self.slider_mode.set(3)
+        self.slider_mode.set(2)
         self.slider_amplitude_label = customtkinter.CTkLabel(self.parameter_frame, text="Amplitude (uA)", anchor="w")
         self.slider_amplitude_label.grid(row=4, column=0, padx=(10, 0))
         self.slider_amplitude = customtkinter.CTkSlider(self.parameter_frame, command = self.amplitude_get, from_=0, to=63, number_of_steps=63)
@@ -137,7 +137,7 @@ class App(customtkinter.CTk):
 
 
             # Initialise channel list
-        Channels = range(0,15)
+        Channels = range(0,14)
         Channels_str = []
         for Channel in Channels:
             Channels_str.append(str(Channel))
