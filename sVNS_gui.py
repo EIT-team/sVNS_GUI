@@ -15,7 +15,7 @@ serialObj = serial.Serial()
 
 # Define default programming message and an empty message array
 #deft_command_msg = [0,1,3,230,0,1,0,1,63,3,0,1,0]
-deft_command_msg = [0,1,3,230,0,100,1,63,3,0,1]
+deft_command_msg = [0,1,56,158,0,100,1,63,2,0,1]
 command_msg = []
 i = 0
 for i in range(11):
