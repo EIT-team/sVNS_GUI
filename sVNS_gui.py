@@ -112,7 +112,7 @@ class App(customtkinter.CTk):
         # Create PW, PF and channel numbers dropdowns
         # Initialise pulse width range and strings
         #PWs = range(50,4050,50)
-        PWs = [50, 1000]
+        PWs = [50, 1000, 2000, 4000]
         PWs_str = []
         for PW in PWs:
             PWs_str.append(str(PW))
@@ -137,7 +137,7 @@ class App(customtkinter.CTk):
 
 
             # Initialise channel list
-        Channels = range(0,14)
+        Channels = range(0,15)
         Channels_str = []
         for Channel in Channels:
             Channels_str.append(str(Channel))
