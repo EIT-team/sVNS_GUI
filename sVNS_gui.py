@@ -366,9 +366,12 @@ class App(customtkinter.CTk):
             if c == '\r':
                 c = '' # don't want returns. chuck it
             if c == '\n':
-                serBuffer += "\n" # add the newline to the buffer
+                timestamp = time.strftime("[%H:%M:%S]")
+                line_with_timestamp = f"{timestamp} {serBuffer}\n"
+                #serBuffer += "\n" # add the newline to the buffer
                 #add the line to the TOP of the log
-                self.textbox.insert('0.0', serBuffer)
+                #self.textbox.insert('0.0', serBuffer)
+                self.textbox.insert('0.0',line_with_timestamp)
                 serBuffer = "" # empty the buffer
             else:
                 serBuffer += c # add to the buffer
