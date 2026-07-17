@@ -123,7 +123,7 @@ class App(customtkinter.CTk):
         for PF in PFs:
             PFs_str.append(str(PF))
             # Initialise "stimulation on" times
-        Stim_On_times = [5,10,20,30]
+        Stim_On_times = [0.5,1,5,10,20,30]
         Stim_On_times_str = []
         for Stim_On_time in Stim_On_times:
             Stim_On_times_str.append(str(Stim_On_time))
@@ -217,7 +217,7 @@ class App(customtkinter.CTk):
     def Stim_On_times_get(self, stim_on_time):
         global T_on_state_bit
         global command_msg
-        stim_time_encoded = int(stim_on_time) / 0.05
+        stim_time_encoded = int(round(float(stim_on_time) / 0.05))
         # command_msg[4] = (int(stim_time_encoded) & 0xff000000)  >> 24
         # command_msg[5] = (int(stim_time_encoded) & 0x00ff0000)  >> 16
         # command_msg[6] = (int(stim_time_encoded) & 0x0000ff00) >> 8
