@@ -366,6 +366,17 @@ class App(customtkinter.CTk):
             if c == '\r':
                 c = '' # don't want returns. chuck it
             if c == '\n':
+                # ADC voltage calibration block:
+                if "mV" in serBuffer:
+                    try:
+                        #extract the raw integer and apply the empirical hardware multiplier:
+                        raw_mv = int(serBuffer.replace("mV", "").strip())
+                        # true_mv = round(raw_mv * 7.57, 1)
+                        true_mv = round(raw_mv * 13.6, 1)
+                        serBuffer = f"Interface Voltage: {true_mv} mV"
+                    except ValueError:
+                        pass # Failsafe if the string format varies
+                
                 timestamp = time.strftime("[%H:%M:%S]")
                 line_with_timestamp = f"{timestamp} {serBuffer}\n"
                 #serBuffer += "\n" # add the newline to the buffer
