@@ -15,10 +15,10 @@ serialObj = serial.Serial()
 
 # Define default programming message and an empty message array
 #deft_command_msg = [0,1,3,230,0,1,0,1,63,3,0,1,0]
-deft_command_msg = [0,1,56,158,0,100,1,0,2,0,1]
+deft_command_msg = [0,1,56,158,0,100,1,0,2,0,1,0]
 command_msg = []
 i = 0
-for i in range(11):
+for i in range(12):
     command_msg.append(0)
 command_msg = deft_command_msg.copy()
 
@@ -285,7 +285,7 @@ class App(customtkinter.CTk):
         global command_sent
         global command_msg
 
-        chksum_python = ((chksum_python + x) for x in command_msg) # checksum to check against after writing to the serial interface
+        chksum_python = sum(command_msg) # checksum to check against after writing to the serial interface
         command_word_str = ','.join(str(x) for x in command_msg)
         command_word_str = '<' + command_word_str
         command_word_str = command_word_str + '>'
